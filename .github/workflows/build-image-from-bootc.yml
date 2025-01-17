@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-    IMAGE_NAME: ghcr.io/gbraad-homelab/private-jellyfin/bootc:latest 
+    IMAGE_NAME: ghcr.io/gbraad-homelab/jellyfin/bootc:latest 
     DISK_TYPE: qcow2
     ROOTFS: xfs
     ARCH: amd64
