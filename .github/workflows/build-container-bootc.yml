@@ -1,0 +1,25 @@
+name: build containers (bootc)
+run-name: building containers (bootc)
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Run podman build - base
+        run: |
+          podman build -t ghcr.io/gbraad-homelab/private-jellyfin/bootc:latest \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-homelab/private-base/bootc" \
+            --build-arg=BASE_VERSION="latest" \
+            -f containers/Containerfile .
+      - name: Push image to ghcr.io - base
+        run: |
+          podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            ghcr.io/gbraad-homelab/private-jellyfin/bootc:latest
