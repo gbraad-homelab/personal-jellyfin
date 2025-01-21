@@ -1,5 +1,5 @@
-name: build containers (bootc)
-run-name: building containers (bootc)
+name: build container (bootc)
+run-name: building container (bootc)
 on:
   workflow_dispatch:
 jobs:
@@ -15,11 +15,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Run podman build - base
         run: |
-          podman build -t ghcr.io/gbraad-homelab/jellyfin/bootc:latest \
+          podman build -t ghcr.io/gbraad-homelab/jellyfin-bootc:latest \
             --build-arg=BASE_IMAGE="ghcr.io/gbraad-homelab/private-base/bootc" \
             --build-arg=BASE_VERSION="latest" \
             -f containers/Containerfile .
       - name: Push image to ghcr.io - base
         run: |
           podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
-            ghcr.io/gbraad-homelab/jellyfin/bootc:latest
+            ghcr.io/gbraad-homelab/jellyfin-bootc:latest
