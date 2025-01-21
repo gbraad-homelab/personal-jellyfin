@@ -1,5 +1,5 @@
-name: build containers
-run-name: building containers
+name: build container
+run-name: building container
 on:
   workflow_dispatch:
 jobs:
@@ -14,6 +14,12 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Run podman build - nextcloud
-        run: podman build -t ghcr.io/gbraad-homelab/jellyfin -f containers/Containerfile .
+        run: |
+          podman build -t ghcr.io/gbraad-homelab/jellyfin \
+            --build-arg=BASE_IMAGE="ghcr.io/gbraad-homelab/private-base" \
+            --build-arg=BASE_VERSION="latest" \
+            -f containers/Containerfile .
       - name: Push image to ghcr.io - nextcloud
-        run: podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} ghcr.io/gbraad-homelab/jellyfin
+        run: |
+          podman push --creds=${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} \
+            ghcr.io/gbraad-homelab/jellyfin
