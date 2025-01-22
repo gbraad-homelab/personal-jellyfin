@@ -1,0 +1,12 @@
+[Unit]
+Description=Ensure Jellyfin folders exist
+Before=jellyfin.service
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/mkdir -p /var/lib/jellyfin /var/log/jellyfin /var/cache/jellyfin
+ExecStart=/usr/bin/chown jellyfin:jellyfin /var/lib/jellyfin /var/log/jellyfin /var/cache/jellyfin
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

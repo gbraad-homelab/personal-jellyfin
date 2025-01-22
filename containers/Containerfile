@@ -3,6 +3,8 @@ ARG BASE_VERSION="latest"
 
 FROM ${BASE_IMAGE}:${BASE_VERSION}
 
+COPY assets/jellyfin-folders.service /etc/systemd/system
+
 RUN dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \
@@ -11,13 +13,7 @@ RUN dnf install -y \
     && dnf install -y davfs2 \
     && dnf clean all \
     && rm -rf /var/cache/yum \
-    && mkdir -p /var/lib/jellyfin \
-    && chown jellyfin:jellyfin /var/lib/jellyfin \
-    && mkdir -p /var/log/jellyfin \
-    && chown jellyfin:jellyfin /var/log/jellyfin \
-    && mkdir -p /var/cache/jellyfin \
-    && chown jellyfin:jellyfin /var/cache/jellyfin
+    && systemctl enable jellyfin \
+    && systemctl enable jellyfin-folders.service
 
-# systemd
-RUN systemctl enable jellyfin
 ENTRYPOINT ["/sbin/init"]
