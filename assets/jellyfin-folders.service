@@ -1,6 +1,7 @@
 [Unit]
 Description=Ensure Jellyfin folders exist
 Before=jellyfin.service
+Requires=jellyfin.service
 
 [Service]
 Type=simple
