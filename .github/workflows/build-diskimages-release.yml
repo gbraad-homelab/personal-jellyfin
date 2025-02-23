@@ -1,7 +1,10 @@
 name: build disk image (bootc)
 run-name: build disk image (bootc)
+
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 */2 * *"
 
 env:
     IMAGE_NAME: ghcr.io/gbraad-homelab/jellyfin-bootc:latest 
@@ -67,10 +70,13 @@ jobs:
           --local \
           ${{ env.IMAGE_NAME }}
 
+    - name: Set release tag
+      run: echo "TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
+
     - name: Create a GitHub release
       uses: ncipollo/release-action@v1
       with:
-        tag: latest
-        name: Latest
+        tag: ${{ env.TAG }}
+        name: Disk images (${{ env.TAG }})
         body: ${{ env.BODY }}
         artifacts: "output/bootiso/*.iso,./output/qcow2/*,"
